@@ -44,6 +44,7 @@ module.exports = function(grunt) {
         'backbone'            : "lib/backbone-0.9.2.min",
         'order'               : 'lib/requirejs-plugins/order',
         'async'               : 'lib/requirejs-plugins/async',
+        'text'                : 'lib/requirejs-plugins/text',
         'ajax-content-loader' : 'modules/ajax-content-loader',
         'helper-functions'    : 'modules/helper-functions',
         'youtube-helper'      : 'modules/youtube-helper',
