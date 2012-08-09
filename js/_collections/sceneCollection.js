@@ -3,12 +3,11 @@
 */
 
 define([
-		'jquery', 
 		'backbone',
 		'underscore',
-		'_models/scene',], 
+		'_models/scene'], 
 
-function($, Backbone, _, Scene){
+function(Backbone, _, Scene){
 	
 	var SceneCollection = Backbone.Collection.extend({
 		 model: Scene

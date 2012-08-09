@@ -2,8 +2,18 @@
  Scene 
 */
 
-define(['jquery', 'backbone', 'underscore'], function($, Backbone, _){
+define([ 
+		'backbone', 
+		'underscore',
+		'_models/element',
+    	'_collections/elementCollection'
+    	], 
+
+function(Backbone, _,Element, ElementCollection){
+
 	var Scene = Backbone.Model.extend({
+
+		elementCollection:{},
 
 		defaults: function() {
 	      return {
@@ -11,7 +21,8 @@ define(['jquery', 'backbone', 'underscore'], function($, Backbone, _){
 	        title: "Default scene name",
 	        cssIdentifier: "",
 	        bgPath: "",
-	        contentPath:""
+	        contentPath:"",
+	        targetContainer:"none"
 	      };
 	    },
 
@@ -24,6 +35,13 @@ define(['jquery', 'backbone', 'underscore'], function($, Backbone, _){
 	      if (!this.get("title")) {
 	        this.set({"title": this.defaults.title});
 	      }
+
+	      if (!this.get("targetContainer")) {
+	        this.set({"targetContainer": this.defaults.targetContainer});
+	      }
+
+	      this.elementCollection = new ElementCollection();
+
 	    },
 
 	    clear: function() {

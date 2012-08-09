@@ -2,42 +2,54 @@
 Default Application View :
 */
 
+/*
+ Application View.  
+*/
+
+
 define([
 		'jquery', 
 		'backbone',
 		'underscore',
-		'text'
+		'_models/scene',
+		'_views/sceneView'
 		], 
 
-function($, Backbone, _, model){
+function($, Backbone, _, Scene, SceneView){
 	
 	var AppView = Backbone.View.extend({
 		
         title: "Default Application Title",
-        curSceneRef: "home",
-        currUser:"",
+        currentSceneView:{},
         sceneCollection:{},
-	    el: '#appContainer',
+        currUser:"",
+	    targetContainer: '#appContainer',
 
 		events: {
-        // any user events (clicks etc) we want to respond to
+        	// any user events (clicks etc) we want to respond to
     	},
 
 		initialize: function(){
 			this.title= 'Initialized Application Title';
 		},
 
+		setScenes: function(_sceneCollection)
+		{
+			this.sceneCollection = _sceneCollection;
+		},
+
 		changeScene: function(_curSceneRef){
 			this.clear();
 
-			//check if the scene name exists in the collections
+			//check if the scene name exists in the scene collection
 			if(this.sceneCollection.length>0)
 			{
-				var tmpScenes = this.sceneCollection.where({sceneRef: _curSceneRef});
+				var tmpScenes = this.sceneCollection.where({sceneRef: _curSceneRef}); // not the best construct to find this.
 				if(tmpScenes.length>0)
 				{
-					this.curSceneRef = _curSceneRef;
-					this.render();
+					this.currentSceneView = new SceneView({model: Scene})
+					this.currentSceneView.model = tmpScenes[0];
+					this.renderScene(this.currentSceneView);
 				}
 				else{
 					alert("The scene you requested cannot be found");
@@ -46,37 +58,32 @@ function($, Backbone, _, model){
 			else{
 				console.log("no collection");
 			}
-			
 		},
 
-		setScenes: function(_sceneCollection)
+		getCurrentScene: function()
 		{
-			this.sceneCollection = _sceneCollection;
-		},
-
-		getCurrentScene: function(){
-
-            var tmpScenes = this.sceneCollection.where({sceneRef: this.curSceneRef});
-            if(tmpScenes.length>0)
-            {
-            	return tmpScenes[0];
-            }
-            else{
-            	return null;
-            }
+            return this.currentSceneView;
         },
 
-		render: function(){
-			//$(this.el).append( this.getCurrentScene().get("title"));
-			$('body').addClass(this.getCurrentScene().get("cssIdentifier")); // set body class to css Identifier
-			$(this.el).load(this.getCurrentScene().get("contentPath")); // append content to targer container
+		renderScene: function(_sceneView){
+			_sceneView.render();
+		},
+
+		generateNavigation:function (_targetContainer){
+			//psuedocode : go through scene collection and create a nested list with anchor tags pointing to the sceneRef.
 		},
 
 		clear: function() {
-	      $(this.el).html("");
+	      $(this.targetContainer).html("");
 	    }
 
 	});
 	
 	return AppView;
 });
+
+
+/*// bind events
+this.bind("change:curSceneRef", function(){
+    console.log("Changed curSceneRef to " + this.get("curSceneRef") );
+});*/

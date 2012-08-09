@@ -1,17 +1,51 @@
-/* Dashboard model. think of this as a scene */
+/*
+ Element : Used for various sections in scene.
 
-define(['jquery', 'backbone', 'underscore'], function($, Backbone, _){
-	var sceneElement = Backbone.Model.extend({
+ Types: static, inline, feed, 
+*/
+
+define([ 
+		'backbone', 
+		'underscore',
+		'config'
+		], 
+
+function(Backbone, _,Config){
+
+	var Element = Backbone.Model.extend({
 
 		defaults: function() {
 	      return {
-	        title: "empty sceneElement"
+	      	elementRef:"0",
+	      	elementType:"",
+	        title: "Default element name",
+	        cssIdentifier: "",
+	        contentPath:"",
+	        contentURL:"",
+	        content:"",
+	        targetContainer:"none",
+	        template:""
 	      };
 	    },
 
+	    el: '#appContainer',
+
 	    initialize: function() {
+
+	      if (!this.get("elementRef")) {
+	        this.set({"sceneRef": this.defaults.sceneRef});
+	      }
+
+	      if (!this.get("elementType")) {
+	        this.set({"elementType": "staticContent"});
+	      }
+
 	      if (!this.get("title")) {
 	        this.set({"title": this.defaults.title});
+	      }
+
+	      if (!this.get("targetContainer")) {
+	        this.set({"targetContainer": this.defaults.targetContainer});
 	      }
 	    },
 
@@ -21,5 +55,5 @@ define(['jquery', 'backbone', 'underscore'], function($, Backbone, _){
 
 	});
 	
-	return sceneElement;
+	return Element;
 });
