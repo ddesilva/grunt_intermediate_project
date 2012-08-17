@@ -13,24 +13,13 @@ define([
 function($, Backbone, _, Element){
 	
 	var ElementView = Backbone.View.extend({
-
-		events: {
-        	// any user events (clicks etc) we want to respond to
-    	},
-
-		initialize: function(){
-			this.model = new Element({
-				title: 'Initialized Element Title'
-			});
-		},
 		
 		render: function(){
-			
 			if(this.model.get("targetContainer") != "none")
 			{
 				if(this.model.get("elementType") != "")
 				{
-					$(this.model.get("targetContainer")).load(this.model.get("contentPath")); // append content to targer container
+					this.processStaticHTML();	
 				}
 				else{
 					console.log("no element type specified");
@@ -41,10 +30,14 @@ function($, Backbone, _, Element){
 			}
 		},
 
-		clear: function() {
-		  $(this.model.get("targetContainer")).html("");	
-	      this.model.clear();
-	    }
+		processStaticHTML:function()
+		{
+			var self = this;
+			$.get(self.model.get("contentPath"), function(markup) { // load content
+				 $(self.model.get("targetContainer")).html(markup); // render content
+			});
+
+		}
 
 	});
 	

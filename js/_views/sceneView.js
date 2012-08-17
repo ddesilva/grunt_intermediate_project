@@ -1,5 +1,5 @@
 /*
- Application View :
+ Scene View :
 */
 
 define([
@@ -27,21 +27,32 @@ function($, Backbone, _, Scene, ElementView){
 		render: function(){
 			if(this.model.get("targetContainer") != "none")
 			{
-				$('body').addClass(this.model.get("cssIdentifier")); // set body class to css Identifier
-				$(this.model.get("targetContainer")).load(this.model.get("contentPath")); // append content to targer container
+				var self = this;
+				
+				// set page styles and clear existing
+				$('body').attr("class",this.model.get("cssIdentifier")); // set body class to css Identifier
+				$(this.model.get("targetContainer")).html("");	// clear existing content
+
+				// load content if any
+				$.get(self.model.get("contentPath"), function(content) { // load content
+				  	self.model.set("content",content); // set content param here as we dont want to preload
+
+				  	// set template
+				    $.get(self.model.get("template"), function(markup) { // load template markup
+
+						 var compiledTmpl = _.template(markup, { scene : self.model } ); //create template
+						 $(self.model.get("targetContainer")).html(compiledTmpl); // inject template into container
+
+						 self.model.elementCollection.render(); // render any page elements
+					});
+
+				});
+
 			}
 			else{
 				console.log("no target container specified");
 			}
-			if(this.model.elementCollection.length>0)
-			{
-				this.model.elementCollection.each(function(_element){
-					var elementView = new ElementView();
-					elementView.model = _element;
-					elementView.render();
-				});
-
-			}
+			
 		},
 
 		addElement:function(_element){

@@ -12,7 +12,7 @@ define([
 
 function(Backbone, _,Config){
 
-	var Element = Backbone.Model.extend({
+	var ElementJSON = Backbone.Model.extend({
 
 		defaults: function() {
 	      return {
@@ -22,7 +22,7 @@ function(Backbone, _,Config){
 	        cssIdentifier: "",
 	        contentPath:"",
 	        content:"",
-	        feedURL:"",
+	        FeedURL:"http://",
 	        targetContainer:"none",
 	        template:""
 	      };
@@ -33,6 +33,10 @@ function(Backbone, _,Config){
 
 	      if (!this.get("elementRef")) {
 	        this.set({"sceneRef": this.defaults.sceneRef});
+	      }
+
+	      if (!this.get("elementType")) {
+	        this.set({"elementType": "staticContent"});
 	      }
 
 	      if (!this.get("title")) {
@@ -50,5 +54,5 @@ function(Backbone, _,Config){
 
 	});
 	
-	return Element;
+	return ElementJSON;
 });

@@ -48,6 +48,7 @@ module.exports = function(grunt) {
         'ajax-content-loader' : 'modules/ajax-content-loader',
         'helper-functions'    : 'modules/helper-functions',
         'youtube-helper'      : 'modules/youtube-helper',
+        'handlebars'          : 'lib/handlebars-1.0.0.beta.6',
         'config-pages'        : 'config'
       },
       shim: {

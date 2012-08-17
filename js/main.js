@@ -1,4 +1,9 @@
 /*! main.js */
+
+// add templates to scenes
+// add event binding
+// add Google feed API support
+
 require.config({
   paths : {
 		    'jquery'              : "lib/jquery-1.7.2.min",
@@ -10,6 +15,7 @@ require.config({
         'ajax-content-loader' : 'modules/ajax-content-loader',
         'helper-functions'    : 'modules/helper-functions',
         'youtube-helper'      : 'modules/youtube-helper',
+        'handlebars'          : 'lib/handlebars-1.0.0.beta.6',
         'config-pages'        : 'config'
 	},
   baseUrl: "js/",
@@ -40,16 +46,18 @@ require([
     '_collections/sceneCollection',
     '_models/element',
     '_collections/elementCollection',
+    '_views/navigationView'
   ], 
-  function(_, Backbone, AppView, AppRouter, Scene, SceneCollection, Element, ElementCollection){
+  function(_, Backbone, AppView, AppRouter, Scene, SceneCollection, Element, ElementCollection, NavigationView){
   
     var appCore = {
 
       init : function() {
 
         // Initialize the application view
-        this.appView = new AppView();
-        appCore.setupScenes( this.appView);
+        appCore.appView = new AppView();
+        appCore.setupScenes(appCore.appView);
+        
        
         // setup app routing
         this.appRouter = new AppRouter(this.appView);  
@@ -60,23 +68,50 @@ require([
       }, 
 
       setupScenes : function(_appView) {
-           var homeScene = new Scene({ sceneRef: "home", title: "Home - Login and Registration" ,contentPath:"js/content/home.html",cssIdentifier:"home",targetContainer:"#appContainer"});
-           var tamworthScene = new Scene({ sceneRef: "tamworth", title: "Tamworth Base" ,contentPath:"js/content/tamworth.html",cssIdentifier:"tamworth",targetContainer:"#appContainer"});
-           var pierceScene = new Scene({ sceneRef: "pierce", title: "Pierce Base" ,contentPath:"js/content/pierce.html",cssIdentifier:"pierce",targetContainer:"#appContainer"});
+          appCore.homeScene = new Scene({ 
+                              sceneRef: "home", 
+                              title: "Home - Login and Registration" ,
+                              contentPath:"js/content/home.html",
+                              cssIdentifier:"home",
+                              template:'js/templates/pages/default-12-col-960.html',
+                              targetContainer:"#appContainer"});
 
-           homeScene.elementCollection.add(new Element({elementRef:"0",elementType:"JSONContent",title:"flickerfeed",
-              contentURL:"http://api.flickr.com/services/feeds/photos_public.gne?id=40840736@N06&lang=en-us&format=json&jsoncallback=?",
-              targetContainer:"#elementContentDiv"}));
+          appCore.tamworthScene = new Scene({ 
+                              sceneRef: "tamworth", 
+                              title: "Tamworth Base" ,
+                              contentPath:"js/content/tamworth.html",
+                              cssIdentifier:"tamworth",
+                              template:'js/templates/pages/default-12-col-960.html',
+                              targetContainer:"#appContainer"});
 
-           var sceneCollection = new SceneCollection([homeScene,tamworthScene,pierceScene]);
-           _appView.setScenes(sceneCollection);
-           _appView.changeScene("home");
-   
+          appCore.pierceScene = new Scene({ sceneRef: "pierce", 
+                              title: "Pierce Base" , 
+                              contentPath:"js/content/pierce.html", 
+                              cssIdentifier:"pierce", 
+                              template:'js/templates/pages/default-12-col-960.html',
+                              targetContainer:"#appContainer"});
+
+          appCore.homeScene.elementCollection.add(new Element({elementRef:"0",elementType:"JSON",title:"flickerfeed",
+          template:'js/templates/lists/default-json-list.html',
+          feedURL:"http://api.flickr.com/services/feeds/photos_public.gne?id=40840736@N06&lang=en-us&format=json&jsoncallback=?",
+          targetContainer:"#JSONContainer"}));
+
+          appCore.homeScene.elementCollection.add(new Element({elementRef:"2",elementType:"HTML",title:"static content",
+          contentPath:"js/content/someinnercontent.html",
+          targetContainer:"#HTMLContainer"}));
+
+          appCore.sceneCollection = new SceneCollection([appCore.homeScene,appCore.tamworthScene,appCore.pierceScene]);
+          _appView.setScenes(appCore.sceneCollection);
+          _appView.changeScene("home");
+
+          appCore.navView = new NavigationView();
+          appCore.navView.initialize(appCore.sceneCollection,"#navContainer","js/templates/lists/default-menu.html");
+          appCore.navView.render();
       }
 
     } // end appCore
 
-    // when ready initialise
+    // when ready initialize
     $(function() {
       appCore.init();   
     });

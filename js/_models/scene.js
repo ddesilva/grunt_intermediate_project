@@ -17,7 +17,7 @@ function(Backbone, _,Element, ElementCollection){
 
 		defaults: function() {
 	      return {
-	      	sceneRef:"0",
+	      	sceneRef:"",
 	        title: "Default scene name",
 	        cssIdentifier: "",
 	        bgPath: "",

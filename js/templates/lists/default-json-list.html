@@ -1,0 +1,8 @@
+<ul>
+<% for (var i = 0; i < items.length; i++) { %>
+  <% var item = items[i]; %>
+  <li>
+    <img title="<%= item.title %>" src="<%= item.media.m %>" </img>
+  </li>
+<% } %>
+</ul>

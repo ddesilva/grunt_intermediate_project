@@ -1,7 +1,5 @@
 /*!
  *    # Config File
- *	
-
  */
 
 var PagesConfig = {

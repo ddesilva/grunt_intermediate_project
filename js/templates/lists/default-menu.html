@@ -1,0 +1,9 @@
+<ul>
+<% for (var i = 0; i < scenes.length; i++) { %>
+  <% var scene = scenes[i]; %>
+  <li>
+   <a href="#<%= scene.get("sceneRef") %>"><%= scene.get("title") %></a>
+  </li>
+<% } %>
+</ul>
+<div class="clear"></div>
